@@ -158,7 +158,21 @@ function requestForIsraelAirplanes() {
                             geometry: new ol.geom.Point([el[5], el[6]]),
                             _icao24: el[0],
                             _callsign: el[1],
-                            // id: el[0]
+                            _origin_country:el[2],
+                            _time_position:el[3],
+                            _last_contact:el[4],
+                            _longitude:el[5],
+                            _latitude:el[6],
+                            _baro_altitude:el[7],
+                            _on_ground:el[8],
+                            _velocity:el[9],
+                            _true_track:el[10],
+                            _vertical_rate:el[11],
+                            _sensors:el[12],
+                            _geo_altitude:el[13],
+                            _squawk:el[14],
+                            _spi:el[15],
+                            _position_source:el[16],
                         })
                         airplane.setId(parseInt(el[0]));
                         console.log(airplane);
@@ -195,6 +209,27 @@ function requestForIsraelAirplanes() {
     };
     request.send(null);
 }
+//popup!
+var popup = new ol.Overlay({
+    element: document.getElementById('popup'),
+  });
+  map.addOverlay(popup);
+  map.on('click', function (evt) {
+    var element = popup.getElement();
+    var coordinate = evt.coordinate;
+    var hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate));//try with airplane!
+  
+    $(element).popover('dispose');
+    popup.setPosition(coordinate);
+    $(element).popover({
+      container: element,
+      placement: 'top',
+      animation: false,
+      html: true,
+      content: '<p>The location you clicked was:</p><code>' + hdms + '</code>',
+    });
+    $(element).popover('show');
+  });
 
 setInterval(requestForIsraelAirplanes, 5000);
 
